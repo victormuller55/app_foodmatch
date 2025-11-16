@@ -69,11 +69,11 @@ Widget _header() {
             padding: const EdgeInsets.only(left: 10, bottom: 10),
             child: ListTile(
               leading: CircleAvatar(
-                radius: 25,
+                radius: 30,
                 backgroundColor: Colors.grey.shade200,
                 child: Icon(Icons.person, color: AppColors.grey700),
               ),
-              title: appText(nome ?? "-", color: AppColors.white, bold: true),
+              title: appText(nome ?? "-", color: AppColors.white, bold: true, fontSize: 17, overflow: true),
               subtitle: appText(email, color: Colors.white70, bold: true),
             ),
           ),

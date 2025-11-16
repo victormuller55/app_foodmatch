@@ -4,6 +4,7 @@ import 'package:app_foodmatch/model/usuario_model.dart';
 import 'package:app_foodmatch/pages/fisica/menu/home/home_page.dart';
 import 'package:app_foodmatch/pages/fisica/menu/menu_page.dart';
 import 'package:app_foodmatch/pages/juridica/menu/menu_page.dart';
+import 'package:app_foodmatch/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:muller_package/muller_package.dart';
 
@@ -79,12 +80,13 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
                 nome ?? "-",
                 color: AppColors.grey800,
                 bold: true,
-                fontSize: 17,
+                fontSize: 19,
               ),
               subtitle: appText(
                 email,
                 color: AppColors.grey600,
                 bold: true,
+                fontSize: 15,
               ),
             ),
           ),
@@ -96,10 +98,10 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
 
   Widget _menu({
     required String title,
-    required Widget page
+    required void Function() onTap
   }) {
     return InkWell(
-      onTap: () => open(screen: page),
+      onTap: onTap,
       borderRadius: BorderRadius.circular(100),
       child: appContainer(
         margin: EdgeInsets.only(bottom: 3),
@@ -137,12 +139,12 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
         children: [
           _userInfos(),
           Divider(),
-          _menu(title: 'Alterar nome/e-mail', page: MenuPage()),
-          _menu(title: 'Alterar dados do perfil', page: MenuPage()),
-          _menu(title: 'Alterar senha', page: MenuPage()),
-          _menu(title: 'Termos de uso', page: MenuPage()),
-          _menu(title: 'Politica de privacidade', page: MenuPage()),
-          _menu(title: 'Sair', page: MenuPage()),
+          _menu(title: 'Alterar nome/e-mail', onTap: () => {}),
+          _menu(title: 'Alterar dados do perfil', onTap: () => {}),
+          _menu(title: 'Alterar senha', onTap: () => {}),
+          _menu(title: 'Termos de uso', onTap: () => {}),
+          _menu(title: 'Politica de privacidade', onTap: () => {}),
+          _menu(title: 'Sair', onTap: () => open(screen: LoginPage())),
         ],
       )
     );

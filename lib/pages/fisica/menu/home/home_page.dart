@@ -208,6 +208,12 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   Widget _body(List<DoacaoModel> doacoes) {
+
+    if(doacoes.isEmpty) {
+      return Center(child: appText('Nenhuma doação encontrada.'));
+    }
+
+
     return RefreshIndicator(
       backgroundColor: FMColors.secondary,
       color: FMColors.primary,

@@ -1,3 +1,4 @@
+import 'package:app_foodmatch/app_widget/app_colors.dart';
 import 'package:app_foodmatch/pages/fisica/menu/home/home_page.dart';
 import 'package:app_foodmatch/pages/juridica/menu/home/home_juridico_page.dart';
 import 'package:app_foodmatch/pages/login/login_page.dart';
@@ -42,10 +43,10 @@ class _InitPageState extends State<InitPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: CircularProgressIndicator(), // loading simples
+        child: CircularProgressIndicator(color: FMColors.primary),
       ),
     );
   }

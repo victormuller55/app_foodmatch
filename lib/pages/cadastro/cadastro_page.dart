@@ -107,11 +107,9 @@ class _CadastroPageState extends State<CadastroPage> {
                   bottomRight: Radius.circular(AppRadius.big),
                 ),
                 gradient: LinearGradient(
-                  colors: inverted
-                      ? [FMColors.primary, FMColors.secondary] // invertido
-                      : [FMColors.secondary, FMColors.primary], // original
-                  begin: Alignment.bottomRight,
-                  end: Alignment.topLeft,
+                  colors: [FMColors.primary, FMColors.secondary],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
               ),
               child: Padding(
@@ -207,6 +205,16 @@ class _CadastroPageState extends State<CadastroPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _body());
+    return scaffold(
+      title: 'Cadastro',
+      size: 0,
+      appBarGradient: LinearGradient(
+        colors: [FMColors.primary, FMColors.secondary],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+      background: Colors.white,
+      body: _body(),
+    );
   }
 }

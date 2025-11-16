@@ -15,7 +15,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final LoginBloc _bloc = LoginBloc();
   final _formKey = GlobalKey<FormState>();
 
@@ -76,11 +75,9 @@ class _LoginPageState extends State<LoginPage> {
                   bottomRight: Radius.circular(AppRadius.big),
                 ),
                 gradient: LinearGradient(
-                  colors: inverted
-                      ? [FMColors.primary, FMColors.secondary] // invertido
-                      : [FMColors.secondary, FMColors.primary], // original
-                  begin: Alignment.bottomRight,
-                  end: Alignment.topLeft,
+                  colors: [FMColors.primary, FMColors.secondary],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
               ),
               child: Padding(
@@ -120,7 +117,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget _form() {
     return Form(
       key: _formKey,
@@ -144,7 +140,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             appSizedBox(height: AppSpacing.normal),
-            appTextButton(text:'Não tenho conta', onTap: () => open(screen: CadastroPage()), color: FMColors.primary),
+            appTextButton(
+              text: 'Não tenho conta',
+              onTap: () => open(screen: CadastroPage()),
+              color: FMColors.primary,
+            ),
             Hero(
               tag: 'google',
               child: Column(
@@ -180,7 +180,17 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _bodyBuilder());
+    return scaffold(
+      title: 'Login',
+      size: 0,
+      appBarGradient: LinearGradient(
+        colors: [FMColors.primary, FMColors.secondary],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+      background: Colors.white,
+      body: _bodyBuilder(),
+    );
   }
 
   @override
