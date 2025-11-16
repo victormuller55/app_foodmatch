@@ -27,6 +27,62 @@ class _HomeJuridicoPageState extends State<HomeJuridicoPage> {
     super.initState();
   }
 
+  Widget _bodyDelete(int id) {
+    return SizedBox(
+      height: 170,
+      width: 200,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 30,
+          top: 10,
+          bottom: 10,
+          right: 30,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            appSizedBox(height: 10),
+            appText(
+              'Apagar doação?',
+              bold: true,
+              fontSize: 18,
+              color: FMColors.primary,
+            ),
+            appSizedBox(height: 10),
+            appText(
+              'Realmente deseja apagar o item? essa ação não poderá ser desfeita!',
+            ),
+            Spacer(),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                appTextButton(
+                  text: 'Apagar',
+                  onTap: () {
+                    bloc.add(HomeJuridicoDeleteDoacaoEvent(id: id));
+                    Navigator.pop(context);
+                  },
+                  color: AppColors.red,
+                ),
+                appTextButton(text: 'Cancelar', onTap: () => Navigator.pop(context)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _popupDelete(int id) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(child: _bodyDelete(id));
+      },
+    );
+  }
+
   Widget _infoEmpresa(UsuarioModel user) {
     return appContainer(
       width: double.infinity,
@@ -45,15 +101,6 @@ class _HomeJuridicoPageState extends State<HomeJuridicoPage> {
             ),
             subtitle: appText(
               user.empresa!.cnpj!,
-              color: Colors.grey,
-              fontSize: 16,
-            ),
-          ),
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: appText(
-              "Endereço: ${user.empresa!.endereco!}",
               color: Colors.grey,
               fontSize: 16,
             ),
@@ -152,7 +199,7 @@ class _HomeJuridicoPageState extends State<HomeJuridicoPage> {
 
   Widget _item(DoacaoModel doacao) {
     return GestureDetector(
-      onLongPress: () => {},
+      onLongPress: () => _popupDelete(doacao.idDoacao!),
       child: appContainer(
         radius: BorderRadius.circular(20),
         backgroundColor: Colors.white,
@@ -204,8 +251,8 @@ class _HomeJuridicoPageState extends State<HomeJuridicoPage> {
       padding: EdgeInsets.all(10),
       children: [
         _header(),
-        appSizedBox(height: 20),
-        Center(child: appText('Meus Produtos', fontSize: 17, bold: true)),
+        appSizedBox(height: 10),
+        Center(child: appText('Minhas doações', fontSize: 17, bold: true)),
         appSizedBox(height: 10),
         _meusProdutos(list),
       ],

@@ -404,14 +404,12 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: scaffold(
-        title: "",
-        body: _bodyBuilder(),
-        drawerColor: AppColors.grey900,
-        appBarColor: AppColors.transparent,
-        bottomNavigationBar: _bottomButton(),
-      ),
+    return scaffold(
+      title: "",
+      body: _bodyBuilder(),
+      drawerColor: AppColors.grey900,
+      appBarColor: AppColors.transparent,
+      bottomNavigationBar: _bottomButton(),
     );
   }
 }

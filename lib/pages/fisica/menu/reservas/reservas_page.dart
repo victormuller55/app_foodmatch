@@ -16,6 +16,7 @@ class ReservasPage extends StatefulWidget {
 }
 
 class _ReservasPageState extends State<ReservasPage> {
+
   ReservaBloc reservaBloc = ReservaBloc();
 
   @override

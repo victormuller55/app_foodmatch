@@ -6,6 +6,13 @@ Future<AppResponse> getDoacoesJurifico() async {
   return await getHTTP(endpoint: AppEndpoints.doacao);
 }
 
+Future<AppResponse> deleteDoacoesJurifico(int id) async {
+  return await deleteHTTP(
+    endpoint: AppEndpoints.doacao,
+    parameters: {'id': id.toString()},
+  );
+}
+
 Future<AppResponse> postDoacoes(DoacaoModel doacaoModel) async {
   return await postHTTP(
     endpoint: "${AppEndpoints.doacao}/cadastrar",
