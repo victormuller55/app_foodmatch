@@ -1,13 +1,10 @@
 import 'package:app_foodmatch/app_widget/app_colors.dart';
+import 'package:app_foodmatch/model/empresa_model.dart';
 import 'package:app_foodmatch/model/pessoa_model.dart';
 import 'package:app_foodmatch/model/usuario_model.dart';
-import 'package:app_foodmatch/pages/cadastro/cadastro_bloc.dart';
 import 'package:app_foodmatch/pages/cadastro/cadastro_concluir.dart';
-import 'package:app_foodmatch/pages/cadastro/cadastro_event.dart';
-import 'package:app_foodmatch/pages/cadastro/cadastro_state.dart';
 import 'package:app_foodmatch/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:muller_package/muller_package.dart';
 
 class CadastroPage extends StatefulWidget {
@@ -18,8 +15,6 @@ class CadastroPage extends StatefulWidget {
 }
 
 class _CadastroPageState extends State<CadastroPage> {
-
-  final CadastroBloc _bloc = CadastroBloc();
   final _formKey = GlobalKey<FormState>();
 
   late AppFormField _nomeForm;
@@ -35,33 +30,32 @@ class _CadastroPageState extends State<CadastroPage> {
 
   void _save() {
     if (_validForm()) {
-
       UsuarioModel usuarioModel = UsuarioModel();
       PessoaModel pessoaModel = PessoaModel();
+      EmpresaModel empresaModel = EmpresaModel();
 
+      empresaModel.nomeFantasia = _nomeForm.controller.text;
+      empresaModel.razaoSocial = _nomeForm.controller.text;
       pessoaModel.nome = _nomeForm.controller.text;
-      pessoaModel.cpf = '';
-
       usuarioModel.email = _emailForm.controller.text;
       usuarioModel.senha = _senhaForm.controller.text;
-      usuarioModel.telefone = '';
-      usuarioModel.tipo = 'FISICO';
-      usuarioModel.pessoa = pessoaModel;
-      usuarioModel.status = 'ATIVO';
 
-      _bloc.add(CadastroSalvarEvent(usuarioModel));
+      usuarioModel.pessoa = pessoaModel;
+      usuarioModel.empresa = empresaModel;
+
+      open(screen: CadastroConcluirPage(usuarioModel: usuarioModel));
     }
   }
 
   @override
   void initState() {
-
     _nomeForm = AppFormField(
       context: context,
       icon: Icon(Icons.person),
       hint: 'Digite seu Nome',
       backgroundColor: AppColors.grey200,
       hintColor: AppColors.grey600,
+      validator: (value) => validateEmpty(value),
     );
 
     _emailForm = AppFormField(
@@ -70,6 +64,7 @@ class _CadastroPageState extends State<CadastroPage> {
       hint: 'Digite seu e-mail',
       backgroundColor: AppColors.grey200,
       hintColor: AppColors.grey600,
+      // validator: (value) => validateEmail(value),
     );
 
     _senhaForm = AppFormField(
@@ -78,6 +73,8 @@ class _CadastroPageState extends State<CadastroPage> {
       hint: 'Digite sua senha',
       backgroundColor: AppColors.grey200,
       hintColor: AppColors.grey600,
+      validator: (value) => validateEmpty(value),
+      showContent: false,
     );
 
     _confirmarSenhaForm = AppFormField(
@@ -86,6 +83,8 @@ class _CadastroPageState extends State<CadastroPage> {
       hint: 'Confirme sua senha',
       backgroundColor: AppColors.grey200,
       hintColor: AppColors.grey600,
+      validator: (value) => validateEmpty(value),
+      showContent: false,
     );
 
     super.initState();
@@ -100,7 +99,7 @@ class _CadastroPageState extends State<CadastroPage> {
             tag: 'logo',
             child: AnimatedContainer(
               duration: Duration(milliseconds: 500),
-              height: 300,
+              height: MediaQuery.of(context).size.height * 0.22,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -116,13 +115,43 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(top: 100, left: 30, right: 30),
-                child: Image.asset('assets/image/foodmatch.png'),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.05,
+                  left: 60,
+                  right: 60,
+                ),
+                child: Image.asset('assets/images/foodmatch.png', width: 70),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget googleButton(VoidCallback onPressed) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(40),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(40),
+        onTap: onPressed,
+        splashColor: Colors.grey.withValues(alpha: 0.2),
+        highlightColor: Colors.grey.withValues(alpha: 0.1),
+        child: appContainer(
+          height: 50,
+          radius: BorderRadius.circular(40),
+          border: Border.all(color: Colors.grey.shade500),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/google.png', height: 24),
+              const SizedBox(width: 12),
+              appText('Entrar com Google'),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -143,7 +172,7 @@ class _CadastroPageState extends State<CadastroPage> {
               'Criar Conta'.toUpperCase(),
               height: 50,
               width: double.infinity,
-              function: () => open(screen: CadastroConcluirPage()),
+              function: () => _save(),
               gradient: LinearGradient(
                 colors: [FMColors.secondary, FMColors.primary],
                 begin: Alignment.centerRight,
@@ -151,25 +180,18 @@ class _CadastroPageState extends State<CadastroPage> {
               ),
             ),
             appSizedBox(height: AppSpacing.normal),
-            appElevatedButtonText(
-              'Já tenho conta'.toUpperCase(),
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              function: () => open(screen: LoginPage()),
-              borderColor: FMColors.primary,
-              textColor: FMColors.primary,
+            appTextButton(
+              text: 'Já tenho conta',
+              onTap: () => open(screen: LoginPage()),
+              color: FMColors.primary,
             ),
             Hero(
               tag: 'google',
               child: Column(
                 children: [
-                  appSizedBox(height: AppSpacing.medium),
                   Divider(),
                   appSizedBox(height: AppSpacing.medium),
-                  SizedBox(
-                    height: 60,
-                    child: Image.asset('assets/image/google.png'),
-                  ),
+                  googleButton(() => {}),
                 ],
               ),
             ),
@@ -183,27 +205,8 @@ class _CadastroPageState extends State<CadastroPage> {
     return ListView(children: [_logo(), _form()]);
   }
 
-  Widget _bodyBuilder() {
-    return BlocBuilder<CadastroBloc, CadastroState>(
-      bloc: _bloc,
-      builder: (context, state) {
-
-        if(state is CadastroLoadingState) {
-          return appLoading(child: CircularProgressIndicator());
-        }
-
-        return _body();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _bodyBuilder());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    return Scaffold(body: _body());
   }
 }

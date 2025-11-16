@@ -1,6 +1,6 @@
 class EmpresaModel {
   int? idEmpresa;
-  String? nomeSocial;
+  String? razaoSocial;
   String? nomeFantasia;
   String? cnpj;
   String? categoria;
@@ -10,7 +10,7 @@ class EmpresaModel {
 
   EmpresaModel({
     this.idEmpresa,
-    this.nomeSocial,
+    this.razaoSocial,
     this.nomeFantasia,
     this.cnpj,
     this.categoria,
@@ -22,7 +22,7 @@ class EmpresaModel {
   factory EmpresaModel.empty() {
     return EmpresaModel(
       idEmpresa: 0,
-      nomeSocial: '',
+      razaoSocial: '',
       nomeFantasia: '',
       categoria: '',
       capacidadeDoacao: 0,
@@ -35,7 +35,7 @@ class EmpresaModel {
 
   EmpresaModel.fromJson(Map<String, dynamic> json) {
     idEmpresa = json['id_empresa'];
-    nomeSocial = json['nome_social'];
+    razaoSocial = json['nome_social'];
     nomeFantasia = json['nome_fantasia'];
     cnpj = json['cnpj'];
     categoria = json['categoria'];
@@ -47,7 +47,7 @@ class EmpresaModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id_empresa'] = idEmpresa;
-    data['nome_social'] = nomeSocial;
+    data['nome_social'] = razaoSocial;
     data['nome_fantasia'] = nomeFantasia;
     data['cnpj'] = cnpj;
     data['categoria'] = categoria;

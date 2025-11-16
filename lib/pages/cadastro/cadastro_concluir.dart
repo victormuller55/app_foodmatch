@@ -1,10 +1,16 @@
 import 'package:app_foodmatch/app_widget/app_colors.dart';
+import 'package:app_foodmatch/model/usuario_model.dart';
+import 'package:app_foodmatch/pages/cadastro/cadastro_bloc.dart';
+import 'package:app_foodmatch/pages/cadastro/cadastro_event.dart';
+import 'package:app_foodmatch/pages/cadastro/cadastro_state.dart';
 import 'package:app_foodmatch/widgets/snackbar.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:muller_package/muller_package.dart';
+import 'package:flutter/material.dart';
 
 class CadastroConcluirPage extends StatefulWidget {
-  const CadastroConcluirPage({super.key});
+  final UsuarioModel usuarioModel;
+  const CadastroConcluirPage({super.key, required this.usuarioModel});
 
   @override
   State<CadastroConcluirPage> createState() => _CadastroConcluirPageState();
@@ -13,6 +19,7 @@ class CadastroConcluirPage extends StatefulWidget {
 class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
 
   final PageController _pageController = PageController();
+  final CadastroBloc _bloc = CadastroBloc();
 
   final _formKeyTelefone = GlobalKey<FormState>();
   final _formKeyEndereco = GlobalKey<FormState>();
@@ -33,6 +40,30 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
     );
   }
 
+  void _save() {
+
+    if(_selected!.toLowerCase() == 'pessoa') {
+      widget.usuarioModel.tipo = 'FISICO';
+      widget.usuarioModel.pessoa!.endereco = _enderecoForm.controller.text;
+      widget.usuarioModel.pessoa!.cpf = _documentoForm.controller.text;
+      widget.usuarioModel.empresa = null;
+    } else {
+      widget.usuarioModel.tipo = 'JURIDICO';
+      widget.usuarioModel.empresa!.endereco = _enderecoForm.controller.text;
+      widget.usuarioModel.empresa!.cnpj = _documentoForm.controller.text;
+      widget.usuarioModel.pessoa = null;
+    }
+
+    DateTime agora = DateTime.now();
+
+    String dataFormatada = agora.toIso8601String().split('.').first;
+
+    widget.usuarioModel.dataCriacao = dataFormatada;
+    widget.usuarioModel.status = 'ATIVO';
+    widget.usuarioModel.telefone = _telefoneForm.controller.text;
+    _bloc.add(CadastroSalvarEvent(widget.usuarioModel));
+  }
+
   void _onChangePage() {
 
     if (_currentPage == 0) {
@@ -45,7 +76,7 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
     }
 
     if (_pageController.page == 3) {
-      // Aqui você pode salvar ou finalizar
+      _save();
       return;
     }
 
@@ -126,7 +157,7 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
           width: 350,
           child: Hero(
             tag: 'logo',
-            child: Image.asset("assets/image/foodmatch_colored.png"),
+            child: Image.asset("assets/images/foodmatch_colored.png"),
           ),
         ),
       ),
@@ -209,8 +240,8 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
             radius: BorderRadius.circular(AppRadius.big),
             gradient: LinearGradient(
               colors: [
-                FMColors.primary.withOpacity(value),
-                FMColors.secondary.withOpacity(value),
+                FMColors.primary.withValues(alpha: value),
+                FMColors.secondary.withValues(alpha: value),
               ],
             ),
             border: Border.all(color: FMColors.primary, width: 2),
@@ -297,7 +328,7 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.55,
+            height: MediaQuery.of(context).size.height / 1.5,
             child: PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
@@ -357,13 +388,30 @@ class _CadastroConcluirPageState extends State<CadastroConcluirPage> {
     );
   }
 
+  Widget _bodyBuilder() {
+    return BlocBuilder<CadastroBloc, CadastroState>(
+      bloc: _bloc,
+      builder: (context, state) {
+
+        if(state is CadastroLoadingState) {
+          return appLoading(child: CircularProgressIndicator());
+        }
+
+        return _body();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return scaffold(
-      title: "Login",
-      body: _body(),
-      showAppBar: false,
-      bottomNavigationBar: _bottomButton(),
+    return SafeArea(
+      child: scaffold(
+        title: "",
+        body: _bodyBuilder(),
+        drawerColor: AppColors.grey900,
+        appBarColor: AppColors.transparent,
+        bottomNavigationBar: _bottomButton(),
+      ),
     );
   }
 }

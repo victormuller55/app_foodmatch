@@ -29,7 +29,7 @@ Future<void> showSnackbar(
   }
 
   // Vibração diferente para cada tipo
-  if (await Vibration.hasVibrator() ?? false) {
+  if (await Vibration.hasVibrator()) {
     switch (type) {
       case SnackbarType.success:
       // vibra super rápido (pulsos curtos)
